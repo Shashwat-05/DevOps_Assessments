@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+  labels:
+    app: budgetapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: budgetapp
+  template:
+    metadata:
+      labels:
+        app: budgetapp
+    spec:
+      containers:
+      - name: budget-app
+        image: shashwatpp/ruby-budgetapp-a2:1
+        ports:
+        - containerPort: 3000

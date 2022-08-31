@@ -1,0 +1,38 @@
+pipeline {
+    agent "ec2-node"
+
+    stages{
+        stage("cloning") {
+            steps{
+                sh 'git clone https://github.com/Shashwat-05/DevOps_Assessments.git'
+                sh 'cd /var/lib/jenkins/workspace/DevOps_Assessments_master/docker_app_data'
+            }
+        }
+
+        stage("build and push"){
+            steps{
+                script{
+
+            docker.withRegistry('https://index.docker.io/v1/', 'docker_credentials') {
+
+            def customImage = docker.build("shashwatpp/ruby-budgetapp-a1:${env.BUILD_ID}")
+
+            customImage.push()
+                }
+            }
+
+            }
+        }
+        stage("deploy"){
+            steps{
+                script{
+                sh 'chmod +x deploy.sh'
+                sh "./deploy.sh ${env.BUILD_ID}"
+                }
+
+            
+            }
+        }
+    }
+}
+

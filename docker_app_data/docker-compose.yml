@@ -1,0 +1,53 @@
+version: "3.9"
+
+x-logging: &logging
+  logging:
+    driver: loki
+    options:
+      loki-url: "http://host.docker.internal:3100/loki/api/v1/push"
+
+services:
+
+  loki:
+    image: grafana/loki:2.6.0
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./config_loki/loki-config.yaml:/mnt/config/loki-config.yaml
+    command: -config.file=/mnt/config/loki-config.yaml
+  
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+
+  db:
+    <<: *logging
+    image: postgres:14.2
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: shash
+      POSTGRES_PASSWORD: pathak
+      POSTGRES_DB: budgy_app
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - ./shash-postgres:/var/lib/postgresql/data
+
+  Budgy:
+    <<: *logging
+    image: shashwatpp/ruby-budgetapp:${imgversion}
+    
+
+    ports:
+      - '1234:3000'
+    volumes:
+        - .:/myapp
+    env_file:
+      - .env 
+    depends_on:
+      - db 
+
+volumes:
+  shash-postgres:
+  budgy:

@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+     stages{
+        stage("cloning") {
+            steps{
+                sh 'git clone https://github.com/Shashwat-05/DevOps_Assessments.git'
+                sh 'cd /var/lib/jenkins/workspace/DevOps_Assessments_master/'
+            }
+        }
+
+        stage("build and push"){
+            steps{
+                script{
+
+            docker.withRegistry('https://index.docker.io/v1/', 'dockerid') {
+
+            def customImage = docker.build("shashwatpp/ruby-budgetapp-a2:${env.BUILD_ID}")
+
+            customImage.push()
+                }
+            }
+
+            }
+        }
+        stage("deploy"){
+            steps{
+                script{
+                    withKubeConfig([credentialsId: 'k8sid', serverUrl: 'https://192.168.29.105:6443']) {
+                    sh "kubectl apply -f deploy-apps.yaml"
+                    sh "kubectl apply -f pps-svc.yaml"
+                    sh "kubectl set image deployments/app-deployment budget-app=shashwatpp/ruby-budgetapp-a2:${env.BUILD_ID}"
+                    echo "application running on -> http://192.168.29.105:30036"
+                }
+
+            
+            }
+        }
+    }
+}
+}
