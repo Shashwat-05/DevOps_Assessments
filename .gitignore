@@ -18,7 +18,7 @@ docker_app_data/tmp
 !/tmp/pids/
 !/tmp/pids/.keep
 
-# Ignore uploaded files in development.
+
 docker_app_data/storage
 !/storage/.keep
 /tmp/storage/*
