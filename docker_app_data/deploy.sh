@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd $1
+
 sudo docker-compose run Budgy rake db:reset
 
 sudo docker-compose run Budgy rake db:migrate
