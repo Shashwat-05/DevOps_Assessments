@@ -13,7 +13,7 @@ services:
     ports:
       - "3100:3100"
     volumes:
-      - ./config_loki/loki-config.yaml:/mnt/config/loki-config.yaml
+      - ./loki-config.yaml:/mnt/config/loki-config.yaml
     command: -config.file=/mnt/config/loki-config.yaml
   
   grafana:
