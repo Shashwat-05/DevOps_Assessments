@@ -39,8 +39,8 @@ services:
     image: shashwatpp/ruby-budgetapp-a1:${IMGVERSION}
     ports:
       - '1234:3000'
-    volumes:
-        - .:/myapp
+    # volumes:
+    #     - .:/myapp
     env_file:
       - .env 
     depends_on:
