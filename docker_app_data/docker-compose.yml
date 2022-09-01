@@ -12,9 +12,9 @@ services:
     image: grafana/loki:2.6.0
     ports:
       - "3100:3100"
-    volumes:
-      - ./loki-config.yaml:/mnt/config/loki-config.yaml
-    command: -config.file=/mnt/config/loki-config.yaml
+    # volumes:
+    #   - ./config_loki/loki-config.yaml:/mnt/config/loki-config.yaml
+    # command: -config.file=/mnt/config/loki-config.yaml
   
   grafana:
     image: grafana/grafana:latest
