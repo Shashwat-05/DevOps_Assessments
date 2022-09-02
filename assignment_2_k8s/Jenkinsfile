@@ -30,7 +30,6 @@ pipeline {
                     sh "kubectl apply -f deploy-apps.yaml"
                     sh "kubectl apply -f pps-svc.yaml"
                     sh "kubectl set image deployments/app-deployment budget-app=shashwatpp/ruby-budgetapp-a2:${env.BUILD_ID}"
-                    echo "application running on -> http://192.168.29.105:30036"
                 }
 
             
