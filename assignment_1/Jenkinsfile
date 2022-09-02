@@ -5,14 +5,14 @@ pipeline {
         label 'worker_node'
     }
 
-    stages{
-        stage("cloning") {
-            steps{
-                sh 'rm -rf DevOps_Assessments'
-                sh 'git clone https://github.com/Shashwat-05/DevOps_Assessments.git'
+    // stages{
+    //     stage("cloning") {
+    //         steps{
+    //             sh 'rm -rf DevOps_Assessments'
+    //             sh 'git clone https://github.com/Shashwat-05/DevOps_Assessments.git'
                 
-            }
-        } 
+    //         }
+    //     } 
 
         stage("build and push"){
             steps{
