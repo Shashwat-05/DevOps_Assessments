@@ -5,7 +5,7 @@ pipeline {
         label 'worker_node'
     }
 
-    // stages{
+    stages{
     //     stage("cloning") {
     //         steps{
     //             sh 'rm -rf DevOps_Assessments'
