@@ -1,9 +1,9 @@
 #!/bin/bash
 
-
+cd $1
 
 sudo docker-compose run Budgy rake db:reset
 
 sudo docker-compose run Budgy rake db:migrate
 
-sudo IMGVERSION=$1 docker-compose -f docker-compose.yml up -d
+sudo docker-compose -f docker-compose.yml --env-file .env up -d
