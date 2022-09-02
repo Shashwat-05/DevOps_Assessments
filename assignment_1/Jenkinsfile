@@ -6,20 +6,13 @@ pipeline {
     }
 
     stages{
-    //     stage("cloning") {
-    //         steps{
-    //             sh 'rm -rf DevOps_Assessments'
-    //             sh 'git clone https://github.com/Shashwat-05/DevOps_Assessments.git'
-                
-    //         }
-    //     } 
-
+ 
         stage("build and push"){
             steps{
                 script{
 
             docker.withRegistry('', 'docker_credentials') {
-            def customImage = docker.build("shashwatpp/ruby-budgetapp-a1:${env.BUILD_ID}","./DevOps_Assessments/docker_app_data/")
+            def customImage = docker.build("shashwatpp/ruby-budgetapp-a1:${env.BUILD_ID}","./docker_app_data/")
 
             customImage.push()
                 }
@@ -31,9 +24,9 @@ pipeline {
             steps{
                 
                 script{
-                def filespath = "/home/root/jenkins_workspace/workspace/budgy_app/DevOps_Assessments/docker_app_data"
+                def filespath = "/home/root/jenkins_workspace/workspace/budgy_app/docker_app_data"
                 sh "cd ${filespath} && chmod +x deploy.sh  && echo IMGVERSION=${env.BUILD_ID} >> .env && ./deploy.sh"
-                sh 'echo "success"'
+
                 }
             
             }
