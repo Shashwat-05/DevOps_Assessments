@@ -1,10 +1,8 @@
 version: "3.9"
-
-x-logging: &logging
-  logging:
-    driver: loki
-    options:
-      loki-url: "http://host.docker.internal:3100/loki/api/v1/push"
+networks:
+  test:
+    name: test
+    driver: bridge
 
 services:
 
@@ -12,17 +10,29 @@ services:
     image: grafana/loki:2.6.0
     ports:
       - "3100:3100"
+    networks:
+      - test
+
+  promtail:
+    image: grafana/promtail:2.6.0
     volumes:
-      - ./config_loki/loki-config.yaml:/mnt/config/loki-config.yaml
-    command: -config.file=/mnt/config/loki-config.yaml
-  
+      - /var/log:/var/log
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - ./promconfig.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - test
+
   grafana:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
+    networks:
+      - test
 
   db:
-    <<: *logging
+
     image: postgres:14.2
     ports:
       - '5432:5432'
@@ -34,19 +44,25 @@ services:
     volumes:
       - ./shash-postgres:/var/lib/postgresql/data
 
-  Budgy:
-    <<: *logging
-    image: shashwatpp/ruby-budgetapp:${imgversion}
-    
+    networks:
+      - test
+    depends_on:
+      - loki
 
+  Budgy:
+    image: shashwatpp/ruby-budgetapp-a1:${IMGVERSION}
     ports:
       - '1234:3000'
     volumes:
-        - .:/myapp
+        - ./:/myapp
     env_file:
-      - .env 
+      - .env
     depends_on:
-      - db 
+      - db
+      - loki
+
+    networks:
+      - test
 
 volumes:
   shash-postgres:
